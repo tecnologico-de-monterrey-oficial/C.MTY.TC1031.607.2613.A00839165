@@ -5,5 +5,5 @@
 ### Nombre: Julio Eduardo Rodriguez Ruiz
 ### Matrícula: A00839165
 ### Carrera: ITC
-### Ciudad: {Escribe el nombre tu ciudad}
+### Ciudad: Monterrey
 
