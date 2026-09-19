@@ -1,9 +1,9 @@
+//A00839165 Julio Eduardo Rodriguez Ruiz
 #include <iostream>
 #include <vector>
 #include <string>
 #include <random>
 #include <chrono>
-#include <fstream>
 #include <iomanip>
 #include <algorithm>
 
@@ -379,6 +379,7 @@ int main() {
                 cout << "\nResultado de la lista ordenada:\n";
                 printVector(arr);
             }
+
 
             cout << "\nMetricas de ejecucion:\n";
             cout << "Tiempo de ejecucion: " << m.duration_ns << " nanosegundos\n";
