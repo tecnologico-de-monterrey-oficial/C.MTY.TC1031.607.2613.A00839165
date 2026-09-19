@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 
 using namespace std;
 
@@ -85,19 +86,76 @@ vector<LogRecord> cargarArchivo(const string& nombreArchivo) {
     return registros;
 }
 
-int main() {
-    cout << "Prueba de Carga de Datos\n";
-    
-    // Probamos cargar el primer archivo desordenado
-    string archivoPrueba = "log607-1.txt";
-    vector<LogRecord> registros = cargarArchivo(archivoPrueba);
-    
-    if (!registros.empty()) {
-        cout << "Se cargaron " << registros.size() << " lineas del archivo " << archivoPrueba << ".\n";
-        cout << "\nComprobacion del primer registro leido:\n";
-        cout << "Original: " << registros[0].lineaOriginal << "\n";
-        cout << "Clave de ordenamiento generada: " << registros[0].claveOrdenamiento << "\n";
+// Algoritmo 1: Selection Sort - Complejidad O(n^2)
+void selectionSort(vector<LogRecord>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n - 1; i++) {
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+        swap(arr[i], arr[min_idx]);
     }
-    
-    return 0;
 }
+
+// Algoritmo 2: Insertion Sort - Complejidad O(n^2) peor caso, O(n) mejor caso
+void insertionSort(vector<LogRecord>& arr) {
+    int n = arr.size();
+    for (int i = 1; i < n; i++) {
+        LogRecord key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && key < arr[j]) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+// Auxiliar para Merge Sort: fusiona dos mitades ordenadas
+void merge(vector<LogRecord>& arr, int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+    vector<LogRecord> L(n1), R(n2);
+    
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+    
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        // Comparamos usando la sobrecarga del operador <
+        if (!(R[j] < L[i])) { 
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < n1) { arr[k] = L[i]; i++; k++; }
+    while (j < n2) { arr[k] = R[j]; j++; k++; }
+}
+
+// Algoritmo 3: Merge Sort - Complejidad O(n log n)
+void mergeSort(vector<LogRecord>& arr, int l, int r) {
+    if (l >= r) return;
+    int m = l + (r - l) / 2;
+    mergeSort(arr, l, m);
+    mergeSort(arr, m + 1, r);
+    merge(arr, l, m, r);
+}
+
+int main() {
+int opcionArchivo, opcionAlgoritmo;
+    string prediccion;
+    
+    while (true) {
+        cout << "\nSistema de Procesamiento de Logs\n";
+        cout << "1. Usar log607-1.txt (Desordenado)\n";
+        cout << "2. Usar log607-2.txt (Casi ordenado)\n";
+        cout << "3. Salir\n";
+        cout << "Elige una opcion: ";
+        cin >> opcionArchivo;
