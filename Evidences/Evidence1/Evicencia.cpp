@@ -49,7 +49,7 @@ long long generarClave(int anio, const string& mesStr, int dia, const string& ho
     stringstream ss(horaStr);
     ss >> h >> sep1 >> m >> sep2 >> s;
     
-    // Construimos el número desplazando posiciones (ej. 20240929143738)
+    // Construimos el número desplazando posiciones
     long long clave = anio;
     clave = clave * 100 + mes;
     clave = clave * 100 + dia;
@@ -86,7 +86,31 @@ vector<LogRecord> cargarArchivo(const string& nombreArchivo) {
     return registros;
 }
 
-// Algoritmo 1: Selection Sort - Complejidad O(n^2)
+// Swap Sort (Intercambio directo ingenuo) - Complejidad O(n^2)
+void swapSort(vector<LogRecord>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[i]) {
+                swap(arr[i], arr[j]);
+            }
+        }
+    }
+}
+
+// Bubble Sort - Complejidad O(n^2)
+void bubbleSort(vector<LogRecord>& arr) {
+    int n = arr.size();
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j + 1] < arr[j]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+
+// Algoritmo: Selection Sort - Complejidad O(n^2)
 void selectionSort(vector<LogRecord>& arr) {
     int n = arr.size();
     for (int i = 0; i < n - 1; i++) {
@@ -100,7 +124,7 @@ void selectionSort(vector<LogRecord>& arr) {
     }
 }
 
-// Algoritmo 2: Insertion Sort - Complejidad O(n^2) peor caso, O(n) mejor caso
+// Algoritmo: Insertion Sort - Complejidad O(n^2) peor caso, O(n) mejor caso
 void insertionSort(vector<LogRecord>& arr) {
     int n = arr.size();
     for (int i = 1; i < n; i++) {
@@ -148,6 +172,72 @@ void mergeSort(vector<LogRecord>& arr, int l, int r) {
     merge(arr, l, m, r);
 }
 
+// Auxiliar para Quick Sort
+int partition(vector<LogRecord>& arr, int low, int high) {
+    LogRecord pivot = arr[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return (i + 1);
+}
+
+// Quick Sort - Complejidad O(n log n) promedio, O(n^2) peor caso
+void quickSort(vector<LogRecord>& arr, int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Búsqueda Binaria para el límite inferior (encuentra la primera aparición del rango)
+int busquedaBinariaInicio(const vector<LogRecord>& arr, long long claveBuscada) {
+    int inicio = 0, fin = arr.size() - 1;
+    int resultado = -1;
+    while (inicio <= fin) {
+        int medio = inicio + (fin - inicio) / 2;
+        // Si el valor medio es mayor o igual, es candidato a ser el inicio
+        if (arr[medio].claveOrdenamiento >= claveBuscada) {
+            resultado = medio;
+            fin = medio - 1; 
+        } else {
+            inicio = medio + 1;
+        }
+    }
+    return resultado;
+}
+
+// Búsqueda Binaria para el límite superior (encuentra la última aparición del rango)
+int busquedaBinariaFin(const vector<LogRecord>& arr, long long claveBuscada) {
+    int inicio = 0, fin = arr.size() - 1;
+    int resultado = -1;
+    while (inicio <= fin) {
+        int medio = inicio + (fin - inicio) / 2;
+        // Si el valor medio es menor o igual, es candidato a ser el fin
+        if (arr[medio].claveOrdenamiento <= claveBuscada) {
+            resultado = medio;
+            inicio = medio + 1;
+        } else {
+            fin = medio - 1;
+        }
+    }
+    return resultado;
+}
+
+// Función para exportar un vector de registros a un archivo de texto
+void guardarArchivo(const string& nombreArchivo, const vector<LogRecord>& registros) {
+    ofstream archivo(nombreArchivo);
+    for (const auto& reg : registros) {
+        archivo << reg.lineaOriginal << "\n";
+    }
+    archivo.close();
+}
+
 int main() {
 int opcionArchivo, opcionAlgoritmo;
     string prediccion;
@@ -159,3 +249,109 @@ int opcionArchivo, opcionAlgoritmo;
         cout << "3. Salir\n";
         cout << "Elige una opcion: ";
         cin >> opcionArchivo;
+        
+        if (opcionArchivo == 3) break;
+        
+        string archivoEntrada = (opcionArchivo == 1) ? "log607-1.txt" : "log607-2.txt";
+        vector<LogRecord> registros = cargarArchivo(archivoEntrada);
+        
+        if (registros.empty()) continue;
+        
+        cout << "\nAlgoritmos de Ordenamiento Disponibles:\n";
+        cout << "1. Swap Sort\n";
+        cout << "2. Bubble Sort\n";
+        cout << "3. Selection Sort\n";
+        cout << "4. Insertion Sort\n";
+        cout << "5. Merge Sort\n";
+        cout << "6. Quick Sort\n";
+        cout << "Elige un algoritmo: ";
+        cin >> opcionAlgoritmo;
+        
+        cin.ignore();
+        cout << "\nEscribe tu prediccion sobre el tiempo de ejecucion y por que:\n> ";
+        getline(cin, prediccion);
+        
+        auto inicio = chrono::high_resolution_clock::now();
+        string nombreAlgoritmo;
+        
+        switch (opcionAlgoritmo) {
+            case 1:
+                swapSort(registros);
+                nombreAlgoritmo = "Swap Sort";
+                break;
+            case 2:
+                bubbleSort(registros);
+                nombreAlgoritmo = "Bubble Sort";
+                break;
+            case 3:
+                selectionSort(registros);
+                nombreAlgoritmo = "Selection Sort";
+                break;
+            case 4:
+                insertionSort(registros);
+                nombreAlgoritmo = "Insertion Sort";
+                break;
+            case 5:
+                mergeSort(registros, 0, registros.size() - 1);
+                nombreAlgoritmo = "Merge Sort";
+                break;
+            case 6:
+                quickSort(registros, 0, registros.size() - 1);
+                nombreAlgoritmo = "Quick Sort";
+                break;
+            default:
+                cout << "Opcion no valida.\n";
+                continue;
+        }
+        
+        auto fin = chrono::high_resolution_clock::now();
+        chrono::duration<double, std::milli> tiempo = fin - inicio;
+        
+        cout << "\nResultados de la Corrida\n";
+        cout << "Algoritmo: " << nombreAlgoritmo << "\n";
+        cout << "Archivo: " << archivoEntrada << " | Tamaño: " << registros.size() << " lineas\n";
+        cout << "Tiempo de ejecucion: " << tiempo.count() << " ms\n";
+        
+        if (opcionAlgoritmo >= 1 && opcionAlgoritmo <= 3) {
+            cout << "Complejidad Teorica: Peor caso O(n^2) | Mejor caso O(n^2)\n";
+        } else if (opcionAlgoritmo == 4) {
+            cout << "Complejidad Teorica: Peor caso O(n^2) | Mejor caso O(n)\n";
+        } else if (opcionAlgoritmo == 5) {
+            cout << "Complejidad Teorica: Peor caso O(n log n) | Mejor caso O(n log n)\n";
+        } else if (opcionAlgoritmo == 6) {
+            cout << "Complejidad Teorica: Peor caso O(n^2) | Mejor caso O(n log n)\n";
+        }
+        
+        guardarArchivo("output607.txt", registros);
+        cout << ">> Datos ordenados exportados a output607.txt correctamente.\n";
+        
+        cout << "\n Busqueda Binaria por Rango Temporal\n";
+        cout << "Formato de busqueda (Mes Dia Ano Hora:Min:Seg) ej. Sep 12 2025 04:33:01\n";
+        
+        string m1, h1, m2, h2; 
+        int d1, a1, d2, a2;
+        
+        cout << "Rango Inicio (Mes Dia Anio Hora): ";
+        cin >> m1 >> d1 >> a1 >> h1;
+        cout << "Rango Fin (Mes Dia Anio Hora): ";
+        cin >> m2 >> d2 >> a2 >> h2;
+        
+        long long clave1 = generarClave(a1, m1, d1, h1);
+        long long clave2 = generarClave(a2, m2, d2, h2);
+        
+        int idxInicio = busquedaBinariaInicio(registros, clave1);
+        int idxFin = busquedaBinariaFin(registros, clave2);
+        
+        if (idxInicio != -1 && idxFin != -1 && idxInicio <= idxFin) {
+            int totalEncontrados = idxFin - idxInicio + 1;
+            cout << "\nSe encontraron " << totalEncontrados << " registros en el rango especificado.\n";
+            vector<LogRecord> rangoRegistros(registros.begin() + idxInicio, registros.begin() + idxFin + 1);
+            guardarArchivo("range607.txt", rangoRegistros);
+            cout << ">> Registros de la busqueda guardados en range607.txt correctamente.\n";
+        } else {
+            cout << "\nNo se encontraron registros en el rango especificado.\n";
+        }
+    }
+    
+    return 0;
+}
