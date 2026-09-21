@@ -23,3 +23,4 @@ Durante el desarrollo de esta evidencia, se aplicó un criterio formativo sobre 
 Quedó estrictamente prohibido pegar el enunciado completo de la actividad para que la IA generara la solución de punta a punta, así como el uso de asistentes agénticos (Copilot en modo agente, Claude Code, Cursor) para resolver el proyecto en un solo paso, ya que esto no genera evidencia de aprendizaje real. Se garantiza la capacidad de explicar y defender cada línea del código fuente entregado. Los prompts específicos y las correcciones de errores detectados en la IA se detallan en el documento de reflexión final.
 
 ## Video Explicativo
+https://youtu.be/aWW2v8w_FKc
