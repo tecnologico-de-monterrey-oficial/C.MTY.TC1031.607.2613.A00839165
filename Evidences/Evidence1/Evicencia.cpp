@@ -309,7 +309,7 @@ int opcionArchivo, opcionAlgoritmo;
         
         cout << "\nResultados de la Corrida\n";
         cout << "Algoritmo: " << nombreAlgoritmo << "\n";
-        cout << "Archivo: " << archivoEntrada << " | Tamaño: " << registros.size() << " lineas\n";
+        cout << "Archivo: " << archivoEntrada << " | Tamano: " << registros.size() << " lineas\n";
         cout << "Tiempo de ejecucion: " << tiempo.count() << " ms\n";
         
         if (opcionAlgoritmo >= 1 && opcionAlgoritmo <= 3) {
