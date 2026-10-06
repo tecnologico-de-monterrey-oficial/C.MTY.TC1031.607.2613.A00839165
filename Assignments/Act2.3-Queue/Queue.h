@@ -1,61 +1,57 @@
-#pragma once
-#include <memory>
-#include <stdexcept>
-#include <utility>
-#include "node.h"
+#if !defined(Queue_h)
+#define Queue_h
 
+#include "Node.h"
 template <typename T>
 class Queue {
 private:
-    std::unique_ptr<Node<T>> head;
+    Node<T>* head;
     Node<T>* tail;
-    int size;
-
 public:
-    Queue() : head(nullptr), tail(nullptr), size(0) {}
-
-    void push(const T& val) {
-        auto newNode = std::make_unique<Node<T>>(val);
-        Node<T>* rawNewNode = newNode.get();
-
-        if (!head) {
-            head = std::move(newNode);
-            tail = rawNewNode;
-        } else {
-            tail->next = std::move(newNode);
-            tail = rawNewNode;
-        }
-        size++;
-    }
-
-    T pop() {
-        if (!head) {
-            throw std::runtime_error("Excepcion: No se pudo borrar, el Queue esta vacio.");
-        }
-
-        T val = std::move(head->data);
-        head = std::move(head->next);
-
-        if (!head) {
-            tail = nullptr;
-        }
-
-        size--;
-        return val;
-    }
-
-    T front() const {
-        if (!head) {
-            throw std::runtime_error("Excepcion: No hay datos en el Queue.");
-        }
-        return head->data;
-    }
-
-    int getSize() const {
-        return size;
-    }
-
-    bool isEmpty() const {
-        return size == 0;
-    }
+    Queue() : head(nullptr), tail(nullptr) {}
+    void pop();
+    void push(T data):
 };
+
+template <typename T>
+void Queue<T>::pop() {
+    // validamos que no este vacío
+    if (head != nullptr) {
+        // validamos si solo hay un elemento
+        if (head == tail) {
+            // creamos un apuntador auxiliar a head
+            Node<T>* aux = head;
+            // borramos aux
+            delete aux;
+            // inicializamos head y tail
+            head = nullptr;
+            tail = nullptr;
+        } else {
+            // creamos un apuntador auxiliar a head
+            Node<T>* aux = head;
+            // actualizamos head
+            head = head->next;
+            // borramos aux
+            delete aux;
+        }
+    }
+}
+
+template <typename T>
+void Queue<T>::push(T data) {
+    // validamos que no este vacía
+    if (head != nullptr) {
+        // actualizamos el next de tail con un nodo nuevo
+        tail->next = new Node<T>(data);
+        // actualizamos tail con tail->next
+        tail = tail->next;
+    } else {
+        // apunto head a un nuevo nodo
+        head = new Node<T>(data);
+        // apunto tail a head
+        tail = head;
+    }
+}
+
+
+#endif // Queue_h
