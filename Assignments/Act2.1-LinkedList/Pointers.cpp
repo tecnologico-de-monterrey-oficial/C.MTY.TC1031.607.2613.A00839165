@@ -2,7 +2,7 @@
 #include <memory>
 using namespace std;
 
-#include "Fraction.h"
+#include "Fractions.h"
 
 int main() {
 

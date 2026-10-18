@@ -9,3 +9,5 @@ struct Node {
     Node(const T& value) : data(value), next(nullptr) {}
     Node(const T& value, std::unique_ptr<Node<T>> nextNode) : data(value), next(std::move(nextNode)) {} 
 };
+
+#endif /* Node_h */

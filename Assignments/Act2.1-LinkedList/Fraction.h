@@ -1,38 +1,33 @@
 #ifndef Fraction_h
 #define Fraction_h
+
 #include <iostream>
-// define una clase fracción básica
+
 class Fraction {
 private:
     int numerator;
     int denominator;
+
 public:
     Fraction() : numerator(0), denominator(1) {}
-    Fraction(int num, int den) : numerator(num), denominator(den) {}
+    Fraction(int num, int den) : numerator(num), denominator(den == 0 ? 1 : den) {}
 
-    int getNumerator() const {
-        return numerator;
+    int getNumerator() const { return numerator; }
+    int getDenominator() const { return denominator; }
+
+    void setNumerator(int num) { numerator = num; }
+    void setDenominator(int den) { denominator = (den == 0 ? 1 : den); }
+
+    // Requerido para findData, deleteData y updateData
+    bool operator==(const Fraction& other) const {
+        return (numerator * other.denominator) == (other.numerator * denominator);
     }
 
-    int getDenominator() const {
-        return denominator;
+    // Requerido para imprimir limpiamente la lista
+    friend std::ostream& operator<<(std::ostream& os, const Fraction& f) {
+        os << f.numerator << "/" << f.denominator;
+        return os;
     }
-
-    void setNumerator(int num) {
-        numerator = num;
-    }
-
-    void setDenominator(int den) {
-        denominator = den;
-    }
-
-    void print() const {
-        std::cout << numerator << "/" << denominator << std::endl;
-    }   
-
-    
 };
-
-
 
 #endif /* Fraction_h */
