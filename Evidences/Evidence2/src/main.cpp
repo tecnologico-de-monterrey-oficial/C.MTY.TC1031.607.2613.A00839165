@@ -93,7 +93,7 @@ int main() {
 
                 ordenado = true;
                 
-                ofstream outFile("output608.out");
+                ofstream outFile("../out/output608.out");
                 if (outFile.is_open()) {
                     DNode<LogRecord>* curr = listaLogs.head;
                     while (curr) {
@@ -215,6 +215,6 @@ int main() {
         }
     }
     
-    cout << "Finalizando.\n";
+    cout << "Finalizado.\n";
     return 0;
 }

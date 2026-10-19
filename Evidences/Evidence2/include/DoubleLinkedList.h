@@ -31,6 +31,9 @@ public:
         count++;
     }
 
+    int size() const { return count; }
+    bool isEmpty() const { return count == 0; }
+
     void repararPunteros() {
         if (!head) {
             tail = nullptr;
