@@ -8,11 +8,11 @@
 #include <chrono>
 
 // Inclusión de los archivos header modulares
-#include "LogRecord.h"
-#include "Node.h"
-#include "Queue.h"
-#include "Stack.h"
-#include "DoubleLinkedList.h"
+#include "../include/LogRecord.h"
+#include "../include/Node.h"
+#include "../include/Queue.h"
+#include "../include/Stack.h"
+#include "../include/DoubleLinkedList.h"
 
 using namespace std;
 
@@ -22,9 +22,12 @@ int main() {
     string filename;
     getline(cin, filename);
 
-    ifstream file(filename);
+    // Concatenamos "data/" al inicio del nombre del archivo
+    string rutaCompleta = "../data/" + filename; 
+
+    ifstream file(rutaCompleta);
     if (!file.is_open()) {
-        cout << "Error: No se pudo abrir el archivo " << filename << "\n";
+        cout << "No se pudo abrir el archivo " << rutaCompleta << "\n";
         return 1;
     }
 
